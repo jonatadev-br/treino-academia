@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="titulo">
+  <title id="titulo">Remada curvada: puxe a barra em direção ao abdômen</title>
+  <style>
+    .bar { animation: row 2.8s ease-in-out infinite; }
+    @keyframes row { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-24px); } }
+    .glow { animation: glow 2.8s ease-in-out infinite; }
+    @keyframes glow { 0%, 100% { opacity: .18; } 50% { opacity: .4; } }
+    @media (prefers-reduced-motion: reduce) { .bar, .glow { animation: none; } }
+  </style>
+  <rect width="320" height="200" rx="18" fill="#10161a"/>
+  <path d="M52 172h216" stroke="#2a313a" stroke-width="4" stroke-linecap="round"/>
+  <ellipse class="glow" cx="176" cy="166" rx="66" ry="7" fill="#5ee0b5"/>
+  <g fill="none" stroke="#dfe8ef" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="226" cy="72" r="10" fill="#dfe8ef" stroke="none"/>
+    <path d="M216 80l-96 44"/>
+    <path d="M120 124l-18 28 2 22M120 124l20 26-4 24"/>
+    <path d="M204 87l-16 46M196 92l18 42" stroke-width="5"/>
+  </g>
+  <g class="bar">
+    <rect x="110" y="142" width="126" height="5" rx="2.5" fill="#5ee0b5"/>
+    <rect x="118" y="129" width="10" height="31" rx="4" fill="#5ee0b5" opacity=".55"/>
+    <rect x="218" y="129" width="10" height="31" rx="4" fill="#5ee0b5" opacity=".55"/>
+  </g>
+  <g fill="none" stroke="#5ee0b5" stroke-width="2" stroke-linecap="round" opacity=".75">
+    <path d="M86 136V116m0 0-4 5m4-5 4 5"/>
+    <path d="M86 116v20m0 0-4-5m4 5 4-5"/>
+  </g>
+</svg>

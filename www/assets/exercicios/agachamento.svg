@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="titulo">
+  <title id="titulo">Agachamento: descida e subida com a barra nos ombros</title>
+  <style>
+    .lifter { animation: squat 3.2s ease-in-out infinite; }
+    @keyframes squat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(13px); } }
+    .glow { animation: glow 3.2s ease-in-out infinite; }
+    @keyframes glow { 0%, 100% { opacity: .2; } 50% { opacity: .45; } }
+    @media (prefers-reduced-motion: reduce) { .lifter, .glow { animation: none; } }
+  </style>
+  <rect width="320" height="200" rx="18" fill="#10161a"/>
+  <ellipse class="glow" cx="160" cy="172" rx="76" ry="8" fill="#5ee0b5"/>
+  <path d="M62 176h196" stroke="#2a313a" stroke-width="4" stroke-linecap="round"/>
+  <g class="lifter">
+    <rect x="56" y="50" width="208" height="6" rx="3" fill="#5ee0b5"/>
+    <rect x="64" y="36" width="12" height="34" rx="4" fill="#5ee0b5" opacity=".55"/>
+    <rect x="244" y="36" width="12" height="34" rx="4" fill="#5ee0b5" opacity=".55"/>
+    <circle cx="160" cy="73" r="10" fill="#dfe8ef"/>
+    <path d="M160 84v43" stroke="#dfe8ef" stroke-width="6" stroke-linecap="round"/>
+    <path d="M160 105l-15-35M160 105l15-35" stroke="#dfe8ef" stroke-width="5" stroke-linecap="round"/>
+    <path d="M160 126l-22 26 3 22M160 126l22 26-3 22" fill="none" stroke="#dfe8ef" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M141 151l-14 2M179 151l14 2" stroke="#dfe8ef" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g fill="none" stroke="#5ee0b5" stroke-width="2" stroke-linecap="round" opacity=".75">
+    <path d="M92 84v16m0 0-4-5m4 5 4-5"/>
+    <path d="M228 100v-16m0 0-4 5m4-5 4 5"/>
+  </g>
+</svg>

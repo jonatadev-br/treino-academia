@@ -1,0 +1,17 @@
+node_modules/
+dist/
+android/local.properties
+android/key.properties
+android/release.jks
+android/app/build/
+android/build/
+android/.gradle/
+keystore/*.jks
+*.iml
+.idea/
+.DS_Store
+*.keystore
+files/.freebuff-project-files.json
+
+# chaves de assinatura (nunca versionar)
+*.jks

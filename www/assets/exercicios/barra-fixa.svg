@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="titulo">
+  <title id="titulo">Barra fixa: puxe os cotovelos para baixo e suba o peito</title>
+  <style>
+    .arrow { animation: rise 2.6s ease-in-out infinite; }
+    @keyframes rise { 0%, 100% { transform: translateY(0); opacity: .45; } 50% { transform: translateY(-10px); opacity: 1; } }
+    .glow { animation: glow 2.6s ease-in-out infinite; }
+    @keyframes glow { 0%, 100% { opacity: .2; } 50% { opacity: .5; } }
+    @media (prefers-reduced-motion: reduce) { .arrow, .glow { animation: none; } }
+  </style>
+  <rect width="320" height="200" rx="18" fill="#10161a"/>
+  <ellipse class="glow" cx="160" cy="174" rx="58" ry="6" fill="#5ee0b5"/>
+  <g stroke="#2a313a" stroke-width="6" stroke-linecap="round">
+    <path d="M64 38h192"/>
+    <path d="M74 38v-14M246 38v-14"/>
+  </g>
+  <g fill="none" stroke="#dfe8ef" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="160" cy="82" r="10" fill="#dfe8ef" stroke="none"/>
+    <path d="M160 93v46"/>
+    <path d="M143 100l-8-56M177 100l8-56" stroke-width="5"/>
+    <path d="M160 139l-17 32M160 139l17 32"/>
+    <path d="M143 171h-10M177 171h10"/>
+  </g>
+  <g class="arrow" fill="none" stroke="#5ee0b5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M92 108V84m0 0-5 6m5-6 5 6"/>
+    <path d="M92 84v24m0 0-5-6m5 6 5-6"/>
+  </g>
+</svg>

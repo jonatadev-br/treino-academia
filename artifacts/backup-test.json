@@ -1,0 +1,634 @@
+{
+  "version": 1,
+  "appVersion": "1.0.0",
+  "createdAt": "2026-11-15T23:14:16.361Z",
+  "settings": {
+    "bodyweightKg": 80,
+    "heightCm": 171,
+    "proteinGoal": 125,
+    "surplusKcal": 250,
+    "unit": "kg"
+  },
+  "templates": [
+    {
+      "id": "tpl-push",
+      "day": "seg",
+      "title": "Push",
+      "focus": "Peito, ombro e tríceps",
+      "optional": false,
+      "cardio": "10–15 min de bike ou caminhada inclinada (LISS)",
+      "exercises": [
+        {
+          "id": "ex-supino",
+          "name": "Supino reto",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 3,
+          "repMax": 5,
+          "restSec": 150,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Aperte as escápulas (pontas das costas) contra o banco e mantenha-as lá o tempo todo.",
+            "Desça a barra controlando até a linha do mamilo.",
+            "Não abra os cotovelos 90º; mantenha-os mais fechados (aprox. 45º do tronco).",
+            "Empurre o chão com os pés para gerar estabilidade."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-militar",
+          "name": "Desenvolvimento militar com barra",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 5,
+          "repMax": 6,
+          "restSec": 150,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Contraia o abdômen e os glúteos para não arquear a lombar.",
+            "A barra deve subir em linha reta, raspando no queixo.",
+            "Quando a barra passar pela testa, enfie a cabeça para frente (\"passar pela janela\").",
+            "Desça controlado até a altura do queixo."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-supino-inc",
+          "name": "Supino inclinado com halteres",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 10,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-elev-lateral",
+          "name": "Elevação lateral",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 10,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-triceps",
+          "name": "Tríceps testa ou corda",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        }
+      ]
+    },
+    {
+      "id": "tpl-pull",
+      "day": "ter",
+      "title": "Pull",
+      "focus": "Costas e bíceps",
+      "optional": false,
+      "cardio": "10–15 min de LISS",
+      "exercises": [
+        {
+          "id": "ex-terra",
+          "name": "Levantamento terra",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 3,
+          "repMax": 5,
+          "restSec": 150,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Barra alinhada no meio do pé. Canelas quase encostando na barra.",
+            "Costas retas e peito estufado antes de puxar. Não arredonde a lombar.",
+            "O movimento começa empurrando o chão com os pés, não puxando com as costas.",
+            "Mantenha a barra raspando na canela e na coxa durante toda a subida."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-barra-fixa",
+          "name": "Barra fixa ou puxada",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 5,
+          "repMax": 8,
+          "restSec": 150,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Inicie o movimento puxando os cotovelos para baixo, não as mãos.",
+            "Estufe o peito em direção à barra.",
+            "Não balance o corpo (se precisar, use elástico).",
+            "Desça até estender quase que totalmente os braços."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-remada-curvada",
+          "name": "Remada curvada",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 6,
+          "repMax": 8,
+          "restSec": 150,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Incline o tronco (aprox. 45º), mantenha a lombar reta e o core firme.",
+            "Puxe a barra em direção ao umbigo/abdômen inferior.",
+            "Aperte as escápulas no topo do movimento.",
+            "Desça a barra de forma controlada, sem deixar o corpo despencar."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-remada-unilateral",
+          "name": "Remada unilateral",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 10,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Apoie bem o corpo e mantenha a lombar neutra durante todo o movimento.",
+            "Puxe o peso em direção ao quadril/abdômen, não ao peito.",
+            "Aperte as escápulas no topo e evite girar o tronco.",
+            "Desça controlado até estender o braço, sem soltar o peso."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-rosca",
+          "name": "Rosca direta",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        }
+      ]
+    },
+    {
+      "id": "tpl-legs",
+      "day": "qui",
+      "title": "Legs",
+      "focus": "Perna completo",
+      "optional": false,
+      "cardio": "5–10 min de bike leve (opcional)",
+      "exercises": [
+        {
+          "id": "ex-agachamento",
+          "name": "Agachamento",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 3,
+          "repMax": 5,
+          "restSec": 150,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Inspire fundo, encha a barriga de ar (bracing) e segure.",
+            "Quebre o quadril para trás e o joelho para frente ao mesmo tempo.",
+            "Desça até quebrar a paralela (se a mobilidade permitir) mantendo o peito aberto.",
+            "Empurre o chão afastando os pés, mantendo os joelhos alinhados com os pés."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-rdl",
+          "name": "Romanian deadlift",
+          "type": "basico",
+          "sets": 2,
+          "repMin": 6,
+          "repMax": 8,
+          "restSec": 150,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Empurre o quadril para trás com os joelhos levemente flexionados.",
+            "Mantenha a barra rente às pernas e as costas retas.",
+            "Sinta o alongamento nos posteriores; desça até onde a técnica permitir.",
+            "Suba empurrando o quadril para frente, sem hiperextender a lombar."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-leg-press",
+          "name": "Leg press ou afundo",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 10,
+          "restSec": 75,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-flexora",
+          "name": "Mesa ou cadeira flexora",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-panturrilha",
+          "name": "Panturrilha",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 12,
+          "repMax": 15,
+          "restSec": 75,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        }
+      ]
+    },
+    {
+      "id": "tpl-reforco",
+      "day": "sex",
+      "title": "Reforço + Hipertrofia",
+      "focus": "Opcional — só se recuperado. Sem supino, terra ou agachamento pesado.",
+      "optional": true,
+      "cardio": "20–30 min de LISS ou HIIT curto de 6–10 min",
+      "exercises": [
+        {
+          "id": "ex-agachamento-leve",
+          "name": "Agachamento leve",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 5,
+          "repMax": 5,
+          "restSec": 75,
+          "loadGroup": "lower",
+          "note": "80% da carga de quinta — sem falhar",
+          "tips": [
+            "Use ~80% da carga do agachamento de quinta; hoje é técnica, não recorde.",
+            "Inspire, trave o core e desça controlado até quebrar a paralela.",
+            "Empurre o chão afastando os pés e mantenha os joelhos alinhados.",
+            "Pare com 1–2 repetições de folga; não falhe."
+          ],
+          "progress": false
+        },
+        {
+          "id": "ex-remada-reforco",
+          "name": "Remada curvada ou unilateral",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 8,
+          "repMax": 10,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Apoie bem o corpo e mantenha a lombar neutra durante todo o movimento.",
+            "Puxe o peso em direção ao quadril/abdômen, não ao peito.",
+            "Aperte as escápulas no topo e evite girar o tronco.",
+            "Desça controlado até estender o braço, sem soltar o peso."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-elev-lateral-reforco",
+          "name": "Elevação lateral",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 12,
+          "repMax": 15,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-rosca-reforco",
+          "name": "Rosca direta ou martelo",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 10,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-triceps-reforco",
+          "name": "Tríceps corda ou testa",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 10,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-flexora-reforco",
+          "name": "Mesa ou cadeira flexora",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 10,
+          "repMax": 12,
+          "restSec": 75,
+          "loadGroup": "lower",
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        },
+        {
+          "id": "ex-core",
+          "name": "Core (prancha/abdominal)",
+          "type": "acessorio",
+          "sets": 2,
+          "repMin": 10,
+          "repMax": 15,
+          "restSec": 75,
+          "loadGroup": "upper",
+          "note": "Peso 0 = peso corporal",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "id-mwij982z-wmpef",
+      "templateId": "tpl-push",
+      "templateTitle": "Push",
+      "date": "2026-11-15",
+      "startedAt": "2026-11-16T00:36:19.115Z",
+      "finishedAt": "2026-11-16T00:36:25.600Z",
+      "notes": "",
+      "cardio": {
+        "done": false,
+        "minutes": 0
+      },
+      "exercises": [
+        {
+          "id": "ex-supino",
+          "name": "Supino reto",
+          "type": "basico",
+          "loadGroup": "upper",
+          "repMin": 3,
+          "repMax": 5,
+          "restSec": 150,
+          "note": "",
+          "tips": [
+            "Aperte as escápulas (pontas das costas) contra o banco e mantenha-as lá o tempo todo.",
+            "Desça a barra controlando até a linha do mamilo.",
+            "Não abra os cotovelos 90º; mantenha-os mais fechados (aprox. 45º do tronco).",
+            "Empurre o chão com os pés para gerar estabilidade."
+          ],
+          "progress": true,
+          "sets": [
+            {
+              "weight": 40,
+              "reps": 5,
+              "rir": 2,
+              "note": "",
+              "savedAt": "2026-11-16T00:36:21.701Z"
+            },
+            {
+              "weight": 36,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            }
+          ]
+        },
+        {
+          "id": "ex-militar",
+          "name": "Desenvolvimento militar com barra",
+          "type": "basico",
+          "loadGroup": "upper",
+          "repMin": 5,
+          "repMax": 6,
+          "restSec": 150,
+          "note": "",
+          "tips": [
+            "Contraia o abdômen e os glúteos para não arquear a lombar.",
+            "A barra deve subir em linha reta, raspando no queixo.",
+            "Quando a barra passar pela testa, enfie a cabeça para frente (\"passar pela janela\").",
+            "Desça controlado até a altura do queixo."
+          ],
+          "progress": true,
+          "sets": [
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            },
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            }
+          ]
+        },
+        {
+          "id": "ex-supino-inc",
+          "name": "Supino inclinado com halteres",
+          "type": "acessorio",
+          "loadGroup": "upper",
+          "repMin": 8,
+          "repMax": 10,
+          "restSec": 75,
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true,
+          "sets": [
+            {
+              "weight": 20,
+              "reps": 10,
+              "rir": 2,
+              "note": "",
+              "savedAt": "2026-11-16T00:36:24.335Z"
+            },
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            }
+          ]
+        },
+        {
+          "id": "ex-elev-lateral",
+          "name": "Elevação lateral",
+          "type": "acessorio",
+          "loadGroup": "upper",
+          "repMin": 10,
+          "repMax": 12,
+          "restSec": 75,
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true,
+          "sets": [
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            },
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            }
+          ]
+        },
+        {
+          "id": "ex-triceps",
+          "name": "Tríceps testa ou corda",
+          "type": "acessorio",
+          "loadGroup": "upper",
+          "repMin": 8,
+          "repMax": 12,
+          "restSec": 75,
+          "note": "",
+          "tips": [
+            "Controle a descida por 2–3 segundos; não deixe o peso despencar.",
+            "Mantenha o core firme e respire: solte o ar na parte difícil.",
+            "Use amplitude completa sem dor; pare se perder a técnica.",
+            "Deixe 1–2 repetições na reserva (RIR 1–2)."
+          ],
+          "progress": true,
+          "sets": [
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            },
+            {
+              "weight": 0,
+              "reps": null,
+              "rir": null,
+              "note": "",
+              "savedAt": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "active": null,
+  "onboardingDone": true
+}

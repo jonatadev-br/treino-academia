@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="titulo">
+  <title id="titulo">Desenvolvimento militar: a barra sobe até acima da cabeça</title>
+  <style>
+    .bar { animation: press 3s ease-in-out infinite; }
+    @keyframes press { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-36px); } }
+    .glow { animation: glow 3s ease-in-out infinite; }
+    @keyframes glow { 0%, 100% { opacity: .18; } 50% { opacity: .42; } }
+    @media (prefers-reduced-motion: reduce) { .bar, .glow { animation: none; } }
+  </style>
+  <rect width="320" height="200" rx="18" fill="#10161a"/>
+  <ellipse class="glow" cx="160" cy="172" rx="64" ry="7" fill="#5ee0b5"/>
+  <path d="M74 174h172" stroke="#2a313a" stroke-width="4" stroke-linecap="round"/>
+  <g fill="none" stroke="#dfe8ef" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="160" cy="82" r="10" fill="#dfe8ef" stroke="none"/>
+    <path d="M160 93v46"/>
+    <path d="M160 112l-22 10M160 112l22 10" stroke-width="5"/>
+    <path d="M160 139l-17 32M160 139l17 32"/>
+    <path d="M143 171h-10M177 171h10"/>
+  </g>
+  <g class="bar">
+    <rect x="86" y="104" width="148" height="5" rx="2.5" fill="#5ee0b5"/>
+    <rect x="94" y="91" width="10" height="31" rx="4" fill="#5ee0b5" opacity=".55"/>
+    <rect x="216" y="91" width="10" height="31" rx="4" fill="#5ee0b5" opacity=".55"/>
+    <path d="M128 105v-12M192 105v-12" stroke="#5ee0b5" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g fill="none" stroke="#5ee0b5" stroke-width="2" stroke-linecap="round" opacity=".75">
+    <path d="M100 84V68m0 0-4 5m4-5 4 5"/>
+    <path d="M100 68v16m0 0-4-5m4 5 4-5"/>
+  </g>
+</svg>

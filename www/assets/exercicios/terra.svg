@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="titulo">
+  <title id="titulo">Levantamento terra: a barra sobe rente às pernas</title>
+  <style>
+    .bar { animation: pull 3.2s ease-in-out infinite; }
+    @keyframes pull { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+    .glow { animation: glow 3.2s ease-in-out infinite; }
+    @keyframes glow { 0%, 100% { opacity: .18; } 50% { opacity: .42; } }
+    @media (prefers-reduced-motion: reduce) { .bar, .glow { animation: none; } }
+  </style>
+  <rect width="320" height="200" rx="18" fill="#10161a"/>
+  <path d="M52 172h216" stroke="#2a313a" stroke-width="4" stroke-linecap="round"/>
+  <ellipse class="glow" cx="170" cy="168" rx="66" ry="7" fill="#5ee0b5"/>
+  <g fill="none" stroke="#dfe8ef" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="224" cy="74" r="10" fill="#dfe8ef" stroke="none"/>
+    <path d="M214 80l-62 38"/>
+    <path d="M152 118l-16 30 2 22M152 118l20 28-4 24"/>
+    <path d="M203 87l-14 30M196 93l18 28" stroke-width="5"/>
+  </g>
+  <g class="bar">
+    <rect x="78" y="142" width="150" height="5" rx="2.5" fill="#5ee0b5"/>
+    <rect x="86" y="128" width="11" height="33" rx="4" fill="#5ee0b5" opacity=".55"/>
+    <rect x="209" y="128" width="11" height="33" rx="4" fill="#5ee0b5" opacity=".55"/>
+  </g>
+  <g fill="none" stroke="#5ee0b5" stroke-width="2" stroke-linecap="round" opacity=".75">
+    <path d="M104 132v-20m0 0-4 5m4-5 4 5"/>
+    <path d="M104 112v20m0 0-4-5m4 5 4-5"/>
+  </g>
+</svg>

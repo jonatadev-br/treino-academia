@@ -1,0 +1,12 @@
+{
+  "appId": "com.treinoforca.app",
+  "appName": "Treino Força",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#0b0d10",
+    "allowMixedContent": false
+  }
+}

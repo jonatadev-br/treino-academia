@@ -1,0 +1,129 @@
+name: Android Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-apk:
+    name: Build + assinatura (release)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar platform/build-tools
+        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Dependências web
+        run: npm ci --no-audit --no-fund
+
+      - name: Sincronizar Capacitor
+        run: npx cap sync android
+
+      - name: Reconstruir keystore a partir do secret
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::Configure o secret KEYSTORE_BASE64 (keystore .jks em base64)."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/release.jks
+          ls -l android/release.jks
+
+      - name: Criar android/key.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "::error::Configure os secrets KEYSTORE_PASSWORD, KEY_PASSWORD e KEY_ALIAS."
+            exit 1
+          fi
+          cat > android/key.properties <<EOF
+          storeFile=release.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+          grep -v password android/key.properties
+
+      - name: Versão do app
+        id: version
+        run: |
+          VERSION=$(grep -m1 'versionName' android/app/build.gradle | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "name=${VERSION:-1.0.0}" >> "$GITHUB_OUTPUT"
+
+      - name: Compilar release (R8 + minify + shrinkResources)
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: zipalign + assinar v1, v2 e v3
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          VERSION: ${{ steps.version.outputs.name }}
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -n 1)"
+          mkdir -p dist
+          APK="treino-forca-v${VERSION}-release.apk"
+          "$BUILD_TOOLS/zipalign" -f -p 4 android/app/build/outputs/apk/release/app-release.apk dist/aligned.apk
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks android/release.jks \
+            --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --key-pass "pass:$KEY_PASSWORD" \
+            --v1-signing-enabled true \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
+            --out "dist/$APK" dist/aligned.apk
+          rm -f dist/aligned.apk
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "dist/$APK"
+          sha256sum "dist/$APK" | tee "dist/$APK.sha256"
+          echo "APK_ASSINADO=dist/$APK" >> "$GITHUB_ENV"
+
+      - name: Publicar APK como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: treino-forca-apk-assinado
+          path: |
+            dist/*.apk
+            dist/*.sha256
+          if-no-files-found: error
+
+      - name: Anexar APK ao release do GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.apk
+            dist/*.sha256
+          generate_release_notes: true
+          name: Treino Força ${{ github.ref_name }}

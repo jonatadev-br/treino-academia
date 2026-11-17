@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="titulo">
+  <title id="titulo">Supino reto: a barra desce controlada e sobe</title>
+  <style>
+    .bar { animation: press 2.8s ease-in-out infinite; }
+    @keyframes press { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    .glow { animation: glow 2.8s ease-in-out infinite; }
+    @keyframes glow { 0%, 100% { opacity: .22; } 50% { opacity: .5; } }
+    @media (prefers-reduced-motion: reduce) { .bar, .glow { animation: none; } }
+  </style>
+  <rect width="320" height="200" rx="18" fill="#10161a"/>
+  <ellipse class="glow" cx="160" cy="156" rx="84" ry="9" fill="#5ee0b5"/>
+  <g stroke="#2a313a" stroke-width="6" stroke-linecap="round">
+    <path d="M80 142h160"/>
+    <path d="M104 142v18M216 142v18M96 160h-16M224 160h16"/>
+  </g>
+  <rect x="88" y="111" width="144" height="9" rx="4.5" fill="#2a313a"/>
+  <path d="M98 120v22M222 120v22" stroke="#2a313a" stroke-width="6" stroke-linecap="round"/>
+  <g fill="none" stroke="#dfe8ef" stroke-width="5" stroke-linecap="round">
+    <circle cx="106" cy="101" r="8" fill="#dfe8ef" stroke="none"/>
+    <path d="M115 104h58"/>
+    <path d="M121 120l-8 19M208 120l8 19"/>
+  </g>
+  <g class="bar">
+    <rect x="70" y="82" width="180" height="5" rx="2.5" fill="#5ee0b5"/>
+    <rect x="78" y="70" width="10" height="29" rx="3" fill="#5ee0b5" opacity=".55"/>
+    <rect x="232" y="70" width="10" height="29" rx="3" fill="#5ee0b5" opacity=".55"/>
+    <path d="M118 84v17M202 84v17" stroke="#5ee0b5" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g fill="none" stroke="#5ee0b5" stroke-width="2" stroke-linecap="round" opacity=".75">
+    <path d="M160 58v-9m0 0-4 4m4-4 4 4"/>
+    <path d="M160 101v9m0 0-4-4m4 4 4-4"/>
+  </g>
+</svg>
