@@ -4,7 +4,7 @@
  * Após o primeiro carregamento, o app abre e funciona 100% sem internet.
  * Para publicar uma nova versão, incremente CACHE_VERSION.
  */
-const CACHE_VERSION = 'treino-forca-v1.0.0-r9';
+const CACHE_VERSION = 'treino-forca-v1.0.1-r1';
 const ASSETS = [
   './',
   './index.html',

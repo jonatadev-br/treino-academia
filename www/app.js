@@ -1848,6 +1848,7 @@ function clearRest() {
   restTimer.finished = false;
   restTimer.remaining = 0;
   restTimer.label = '';
+  if (restTimer.interval) { clearInterval(restTimer.interval); restTimer.interval = null; }
   updateTimerUI();
 }
 
