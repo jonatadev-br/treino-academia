@@ -47,32 +47,45 @@ jobs:
       - name: Sincronizar Capacitor
         run: npx cap sync android
 
-      - name: Reconstruir keystore a partir do secret
+      - name: Preparar keystore de assinatura
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          S_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          S_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          S_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "::error::Configure o secret KEYSTORE_BASE64 (keystore .jks em base64)."
-            exit 1
+          set -euo pipefail
+          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$S_KEY_ALIAS" ]; then
+            echo "Usando keystore a partir dos secrets."
+            echo "$KEYSTORE_BASE64" | base64 --decode > android/release.jks
+            ALIAS="$S_KEY_ALIAS"
+            STOREPASS="$S_KEYSTORE_PASSWORD"
+            KEYPASS="$S_KEY_PASSWORD"
+          else
+            echo "::warning::Secrets de assinatura ausentes — gerando keystore automatica no runner."
+            echo "AVISO: keystore nova => assinatura nova. Quem instalou a versao anterior precisa desinstalar."
+            ALIAS="treino-forca"
+            STOREPASS="treino-forca-ci-2026"
+            KEYPASS="treino-forca-ci-2026"
+            keytool -genkeypair -v \
+              -keystore android/release.jks \
+              -alias "$ALIAS" \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass "$STOREPASS" -keypass "$KEYPASS" \
+              -dname "CN=Treino Forca, OU=Mobile, O=Treino Forca, L=Sao Paulo, ST=SP, C=BR"
           fi
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/release.jks
           ls -l android/release.jks
+          echo "SIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
+          echo "SIGN_STOREPASS=$STOREPASS" >> "$GITHUB_ENV"
+          echo "SIGN_KEYPASS=$KEYPASS" >> "$GITHUB_ENV"
 
       - name: Criar android/key.properties
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          if [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
-            echo "::error::Configure os secrets KEYSTORE_PASSWORD, KEY_PASSWORD e KEY_ALIAS."
-            exit 1
-          fi
           cat > android/key.properties <<EOF
           storeFile=release.jks
-          storePassword=$KEYSTORE_PASSWORD
-          keyAlias=$KEY_ALIAS
-          keyPassword=$KEY_PASSWORD
+          storePassword=${SIGN_STOREPASS}
+          keyAlias=${SIGN_ALIAS}
+          keyPassword=${SIGN_KEYPASS}
           EOF
           grep -v password android/key.properties
 
@@ -90,9 +103,6 @@ jobs:
 
       - name: zipalign + assinar v1, v2 e v3
         env:
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           VERSION: ${{ steps.version.outputs.name }}
         run: |
           set -euo pipefail
@@ -102,9 +112,9 @@ jobs:
           "$BUILD_TOOLS/zipalign" -f -p 4 android/app/build/outputs/apk/release/app-release.apk dist/aligned.apk
           "$BUILD_TOOLS/apksigner" sign \
             --ks android/release.jks \
-            --ks-key-alias "$KEY_ALIAS" \
-            --ks-pass "pass:$KEYSTORE_PASSWORD" \
-            --key-pass "pass:$KEY_PASSWORD" \
+            --ks-key-alias "$SIGN_ALIAS" \
+            --ks-pass "pass:$SIGN_STOREPASS" \
+            --key-pass "pass:$SIGN_KEYPASS" \
             --v1-signing-enabled true \
             --v2-signing-enabled true \
             --v3-signing-enabled true \
