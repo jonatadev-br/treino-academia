@@ -566,4 +566,4 @@ https://github.com/jonataprezende-commits/treino-academia/releases/download/v1.0
 
 Página da release: https://github.com/jonataprezende-commits/treino-academia/releases/tag/v1.0.2
 
-> A v1.0.2 usa uma chave de assinatura nova (gerada no CI). Se instalou a v1.0.1, desinstale antes de instalar esta versão.
+> A partir da v1.0.2 a assinatura é fixa (chave guardada nos secrets do CI): as próximas versões atualizam por cima sem precisar desinstalar.
