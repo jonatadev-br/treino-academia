@@ -254,9 +254,10 @@ main { padding: 16px 14px 8px; }
 .field input[type="text"],
 .field input[type="number"],
 .field input[type="search"],
+.field input[type="date"],
 .field select,
 .field textarea,
-input[type="text"], input[type="number"], input[type="search"], select, textarea {
+input[type="text"], input[type="number"], input[type="search"], input[type="date"], select, textarea {
   width: 100%;
   min-height: 46px;
   padding: 10px 12px;
@@ -271,6 +272,7 @@ input[type="text"], input[type="number"], input[type="search"], select, textarea
   -webkit-appearance: none;
 }
 .field textarea { min-height: 76px; resize: vertical; line-height: 1.4; }
+input[type="date"] { color-scheme: dark; }
 .field input:focus, .field select:focus, .field textarea:focus,
 input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .field .hint { font-size: 11.5px; color: var(--muted-2); margin-top: 5px; }

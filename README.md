@@ -317,7 +317,8 @@ application-label:'Treino Força'
 ## 8. Funcionalidades
 
 ### Dashboard
-- Próximo treino do ciclo (Push → Pull → Legs → Reforço opcional), com dia e atalho de início.
+- Próximo treino sugerido pela **sequência** do ciclo (Push → Pull → Legs), com atalho de início.
+- **Iniciar outro treino:** escolha livre de qualquer template (inclusive o Reforço opcional), sem depender do dia da semana.
 - Treino em andamento com progresso.
 - Treinos da semana, volume semanal e sessões salvas.
 - Alerta de deload quando a regra é acionada.
@@ -325,7 +326,7 @@ application-label:'Treino Força'
 - Histórico resumido dos últimos treinos.
 
 ### Treino
-- Início por treino do dia ou por qualquer template.
+- Início pelo treino sugerido no ciclo ou por qualquer template da lista.
 - Registro por série: **peso, reps, RIR (0–4+), nota opcional e data/hora**; série salva na hora.
 - Timer de descanso automático: **2:30 nos básicos** e **1:15 nos acessórios**, com
   iniciar/pausar/continuar, +15 s, zerar e **X sempre visível no canto direito**. Em telas
@@ -337,7 +338,7 @@ application-label:'Treino Força'
   do exercício, no formato `Último treino: 40 kg × 5 reps (RIR 2)`. Se ainda não há histórico,
   a mensagem “Primeira vez...” continua aparecendo sozinha.
 - Sessão em andamento fica salva: fecha o app e continua de onde parou.
-- **Sexta — Reforço + Hipertrofia (opcional):** 7 exercícios na versão completa, com versão enxuta descrita na Ajuda; tag **OPCIONAL** visível, sem cargas máximas e sem contar como dia obrigatório do PPL. Se pular a sexta, o ciclo segue na segunda.
+- **Sexta — Reforço + Hipertrofia (opcional):** 8 exercícios na versão completa, com versão enxuta descrita na Ajuda; tag **OPCIONAL** visível, sem cargas máximas e sem contar como dia obrigatório do PPL. O Reforço não avança o ciclo.
 - Editar/adicionar/remover/reordenar exercícios; CRUD de templates e “Restaurar padrão”.
 
 ### Guia de execução e dicas
@@ -354,7 +355,9 @@ application-label:'Treino Força'
   copiadas para a sessão; também entram no backup JSON.
 
 ### Histórico
-- Lista por data, filtro por treino (Push/Pull/Legs/Reforço) e detalhe de cada sessão.
+- Lista por data (mais recente primeiro), filtro por treino (Push/Pull/Legs/Reforço) e detalhe de cada sessão.
+- **+ Treino passado:** escolha o template e uma data retroativa (nunca futura) para registrar um treino esquecido;
+  as séries são salvas normalmente e a lista é reordenada por data.
 - Exclusão de treino com confirmação.
 
 ### Progresso
@@ -409,14 +412,27 @@ application-label:'Treino Força'
 **Sexta — Reforço + Hipertrofia**
 - Dia de reforço, não de força máxima. O template padrão traz agachamento leve (2×5 a ~80% da
   carga de quinta, tratado como acessório técnico: as duas séries usam a mesma carga, sem top
-  set/back-off), remada, elevação lateral, rosca, tríceps, flexora e core, com 20–30 min de
-  LISS ou HIIT curto.
+  set/back-off), remada, elevação lateral, rosca, tríceps, flexora, core e panturrilha sentado,
+  com 20–30 min de LISS ou HIIT curto.
 - O agachamento leve é marcado como **técnico** (`progress: false`): o app repete a carga e não
   sugere +5 kg. Os demais extras usam dupla progressão normal (sobem ao bater o topo da faixa
   nas 2 séries).
 - A versão enxuta (agachamento leve + remada + elevação lateral + tríceps + core) está na Ajuda;
-  para usá-la, edite a sexta e remova rosca e flexora. Sexta não conta como dia obrigatório:
-  pular não muda o ciclo, que continua na segunda.
+  para usá-la, edite a sexta e remova rosca e flexora. O Reforço não conta como dia obrigatório:
+  sendo opcional, ele não avança o ciclo.
+
+**Ciclo por sequência (sem dia da semana)**
+- O próximo treino vem do **último treino do ciclo registrado no histórico**, e não do dia da
+  semana. Fez Legs numa segunda e não treinou na quinta? Na terça (ou quando voltar) o app
+  sugere **Push**. Pular dias nunca trava o app num treino específico.
+- A ordem vem do campo `day` dos templates não opcionais (Push, Pull, Legs). Reforço e templates
+  criados como **extra** não entram na sequência e não a fazem avançar.
+- O vínculo do treino salvo com o ciclo usa `templateId` e, se o template tiver sido recriado,
+  o título como reserva. Treino de template excluído é ignorado no cálculo.
+- Treinos retroativos entram na posição cronológica correta e também não alteram a sugestão se
+  forem mais antigos que o último treino do ciclo.
+- A duração é medida pelo relógio real (`realStartedAt`), com teto de 6 h, para que um treino
+  lançado com data passada não gere minutos absurdos.
 
 **Timer**
 - Básicos 150 s; acessórios 75 s. Ao salvar uma série, o timer inicia sozinho com o nome do
@@ -501,6 +517,20 @@ application-label:'Treino Força'
   conteúdo; recomendo abrir e fazer um treino de teste após instalar.
 
 ---
+
+### Ciclo por sequência e treino retroativo (revisão)
+- `node --check www/app.js` sem erros.
+- Teste de lógica em Node (VM com DOM mínimo) cobrindo: ordem do ciclo Push → Pull → Legs;
+  Legs feito na segunda → próxima sugestão Push; treino concluído hoje → sugestão "amanhã";
+  Pull → Legs; Reforço e treino extra não avançam o ciclo; template excluído é ignorado.
+- Treino retroativo: data escolhida vai para `date`/`startedAt`, título do template é mantido,
+  séries de Legs somam volume nos exercícios de perna e a duração reflete o tempo real de
+  registro; datas futuras são rejeitadas (campo `max` no modal e comparação em `startSession`).
+- Histórico: ordenação por data decrescente após salvar, importar e carregar o estado;
+  exclusão preserva a ordem; "último treino" e alertas de deload continuam usando o treino
+  mais recente do exercício.
+- **Não revisado visualmente:** layout do card "Iniciar outro treino", do botão "+ Treino
+  passado" e do campo de data no painel do navegador.
 
 ## 12. Observações e limitações
 

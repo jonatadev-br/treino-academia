@@ -385,7 +385,7 @@ function loadState() {
     // Um array vazio é intencional (o usuário pode apagar todos os templates);
     // só usa os padrões quando o campo não existe em dados antigos.
     merged.templates = (Array.isArray(data.templates) ? data.templates : base.templates).map(normalizeTemplate);
-    merged.sessions = (Array.isArray(data.sessions) ? data.sessions : []).map(normalizeSession).filter(Boolean);
+    merged.sessions = sortSessionsByRecency((Array.isArray(data.sessions) ? data.sessions : []).map(normalizeSession).filter(Boolean));
     upgradePanturrilhaWorkouts(merged);
     merged.active = data.active ? normalizeActive(data.active) : null;
     merged.onboardingDone = !!data.onboardingDone;
@@ -485,6 +485,8 @@ function normalizeSession(s) {
 function normalizeActive(a) {
   const s = normalizeSession(a);
   if (!s) return null;
+  // Preserva o início real para a duração de um treino retroativo.
+  if (a.realStartedAt) s.realStartedAt = a.realStartedAt;
   s.exercises = s.exercises.map(function (ex, i) {
     const src = a.exercises[i] || {};
     ex.done = !!src.done;
@@ -1164,29 +1166,56 @@ function updateTopbar() {
   }
 }
 
-/** Descobre o próximo treino do ciclo Push → Pull → Legs (→ Reforço opcional). */
+/** Templates do ciclo fixo (Push → Pull → Legs), na ordem do dia configurado. */
+function cycleTemplates() {
+  return state.templates.filter(function (t) {
+    return !t.optional && (t.day in DAY_ORDER);
+  }).sort(function (a, b) { return DAY_ORDER[a.day] - DAY_ORDER[b.day]; });
+}
+
+function sortSessionsByRecency(list) {
+  const arr = list || (state ? state.sessions : []);
+  arr.sort(function (a, b) {
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return String(b.startedAt || '').localeCompare(String(a.startedAt || ''));
+  });
+  return arr;
+}
+
+/** Índice do template de um treino salvo dentro do ciclo (-1 se não faz parte). */
+function cycleIndexForSession(s, cycle) {
+  if (!s) return -1;
+  for (let i = 0; i < cycle.length; i++) {
+    if (s.templateId && cycle[i].id === s.templateId) return i;
+    if (cycle[i].title === s.templateTitle) return i;
+  }
+  return -1;
+}
+
+/**
+ * Descobre o próximo treino pela SEQUÊNCIA do ciclo, não pelo dia da semana.
+ * O último treino do ciclo indica o próximo da ordem Push → Pull → Legs;
+ * o Reforço (opcional) e treinos extras não avançam o ciclo.
+ * Exemplo: pulou quinta e fez Legs na segunda → na terça o app sugere Push.
+ */
 function nextTemplate() {
   if (!state.templates.length) return null;
-  const now = new Date();
-  const map = {};
-  state.templates.forEach(function (t) { if (!map[t.day]) map[t.day] = t; });
-  const todayKey = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'][now.getDay()];
-  const doneToday = state.sessions.some(function (s) { return s.date === dateKey(now); });
-  if (map[todayKey] && !doneToday) return { tpl: map[todayKey], when: 'hoje', date: now };
-
-  let best = null;
-  state.templates.forEach(function (t) {
-    if (!(t.day in DAY_ORDER)) return;
-    let delta = (DAY_ORDER[t.day] - now.getDay() + 7) % 7;
-    if (delta === 0) delta = 7;
-    if (!best || delta < best.delta) best = { tpl: t, delta: delta };
-  });
-  if (!best) return null;
-  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + best.delta);
+  const cycle = cycleTemplates();
+  if (!cycle.length) {
+    return { tpl: state.templates[0], when: 'hoje', date: new Date() };
+  }
+  const doneToday = state.sessions.some(function (s) { return s.date === dateKey(new Date()); });
+  const ordered = sortSessionsByRecency(state.sessions.slice());
+  let lastIdx = -1;
+  for (let i = 0; i < ordered.length; i++) {
+    const idx = cycleIndexForSession(ordered[i], cycle);
+    if (idx !== -1) { lastIdx = idx; break; }
+  }
+  const nextIdx = lastIdx === -1 ? 0 : (lastIdx + 1) % cycle.length;
   return {
-    tpl: best.tpl,
-    when: best.delta === 1 ? 'amanhã' : cap(WEEKDAYS[DAY_ORDER[best.tpl.day]]) + ', ' + fmtDayMonth(d),
-    date: d
+    tpl: cycle[nextIdx],
+    when: doneToday ? 'amanhã' : 'hoje',
+    date: new Date()
   };
 }
 
@@ -1202,7 +1231,7 @@ function nextWorkoutCardHTML(next) {
     '<div class="card-head" style="margin-bottom:6px">' +
       '<div><h3 style="font-size:23px;letter-spacing:-0.02em">' + esc(tpl.title) + '</h3>' +
       '<p class="small muted">' + esc(tpl.focus || '') + '</p></div>' +
-      '<span class="badge ' + (tpl.optional ? 'badge-opt' : '') + '">' + (tpl.optional ? 'Opcional' : diaLabel(tpl.day)) + '</span>' +
+      '<span class="badge ' + (tpl.optional ? 'badge-opt' : '') + '">' + (tpl.optional ? 'Opcional' : 'Ciclo') + '</span>' +
     '</div>' +
     '<div class="tiny muted">' + tpl.exercises.length + ' exercícios · ' + totalSets + ' séries</div>' +
     (tpl.cardio ? '<div class="tiny muted" style="margin-top:4px">Cardio: ' + esc(tpl.cardio) + '</div>' : '') +
@@ -1240,6 +1269,27 @@ function renderDashboard() {
     '</div>';
   } else {
     html += nextWorkoutCardHTML(next);
+  }
+
+  // Sem sessão ativa: oferece iniciar qualquer template fora da ordem sugerida.
+  // Com treino em andamento o card some, pois a sessão precisa ser concluída ou descartada.
+  if (!state.active) {
+    html += '<div class="card">' +
+      '<div class="eyebrow">Escolha livre</div>' +
+      '<h3 style="font-size:16px;margin:6px 0 4px">Iniciar outro treino</h3>' +
+      '<p class="tiny muted" style="margin-bottom:10px">Treine qualquer template agora, independente do dia da semana.</p>';
+    if (state.templates.length) {
+      html += '<label class="field" style="margin-bottom:10px"><span class="label">Template</span>' +
+        '<select id="dash-other-template" aria-label="Escolher template para iniciar">' +
+        state.templates.map(function (t) {
+          return '<option value="' + esc(t.id) + '">' + esc(t.title) + (t.optional ? ' (opcional)' : '') + '</option>';
+        }).join('') +
+        '</select></label>' +
+        '<button type="button" class="btn btn-secondary btn-block" data-act="start-other">Iniciar este treino</button>';
+    } else {
+      html += '<div class="empty">Nenhum treino cadastrado. <button type="button" class="link-btn" data-act="edit-templates">Criar treino</button></div>';
+    }
+    html += '</div>';
   }
 
   html += '<div class="stat-grid" style="margin-bottom:12px">' +
@@ -1302,6 +1352,10 @@ function bindDashboard() {
     btn.addEventListener('click', function () {
       const act = btn.dataset.act;
       if (act === 'start') startSession(btn.dataset.id);
+      else if (act === 'start-other') {
+        const sel = $('#dash-other-template');
+        if (sel) startSession(sel.value);
+      }
       else if (act === 'continue') setView('treino');
       else if (act === 'edit-templates') openEditor();
       else if (act === 'history') setView('historico');
@@ -1377,7 +1431,7 @@ function openSessionDetail(s, opts) {
 /* =========================================================================
    SESSÃO DE TREINO
    ========================================================================= */
-function startSession(templateId) {
+function startSession(templateId, opts) {
   let tpl = state.templates.find(function (t) { return t.id === templateId; });
   if (!tpl) {
     const nx = nextTemplate();
@@ -1389,6 +1443,13 @@ function startSession(templateId) {
 
   ui.editor = null;
   const now = new Date();
+  const todayKey = dateKey(now);
+  // Data retroativa (histórico): registra o treino no dia escolhido, nunca no futuro.
+  const wanted = opts && opts.date && /^\d{4}-\d{2}-\d{2}$/.test(opts.date) ? opts.date : null;
+  const backdated = wanted && wanted < todayKey ? parseDateKey(wanted) : null;
+  const startedAt = backdated
+    ? new Date(backdated.getFullYear(), backdated.getMonth(), backdated.getDate(), now.getHours(), now.getMinutes())
+    : now;
   const exercises = tpl.exercises.map(function (ex) {
     const adv = nextLoadAdvice(ex);
     const base = adv.weight != null ? adv.weight : 0;
@@ -1418,8 +1479,10 @@ function startSession(templateId) {
     id: uid(),
     templateId: tpl.id,
     templateTitle: tpl.title,
-    date: dateKey(now),
-    startedAt: now.toISOString(),
+    date: dateKey(startedAt),
+    startedAt: startedAt.toISOString(),
+    // Relógio real: usado para calcular a duração mesmo em treino retroativo.
+    realStartedAt: now.toISOString(),
     finishedAt: null,
     notes: '',
     cardio: { done: false, minutes: 0 },
@@ -1427,7 +1490,9 @@ function startSession(templateId) {
   };
   persist();
   setView('treino');
-  toast('Treino iniciado. Bons levantamentos.');
+  toast(backdated
+    ? 'Registrando treino de ' + fmtDateLabel(dateKey(startedAt)) + '.'
+    : 'Treino iniciado. Bons levantamentos.');
 }
 
 function renderTreino() {
@@ -1437,7 +1502,7 @@ function renderTreino() {
   if (state.active) { renderActiveSession(box); return; }
 
   const next = nextTemplate();
-  let html = '<div class="view-head"><div><h2>Treino</h2><p>Escolha o treino do dia</p></div>' +
+  let html = '<div class="view-head"><div><h2>Treino</h2><p>Escolha qualquer treino do ciclo</p></div>' +
     '<button class="link-btn" data-act="edit-templates">Editar treinos</button></div>';
   html += nextWorkoutCardHTML(next);
   html += '<div class="eyebrow" style="margin:14px 0 8px">Todos os treinos</div>';
@@ -1708,7 +1773,14 @@ function discardActive() {
 
 function finishSession() {
   if (!state.active) return;
-  const finishedAt = new Date().toISOString();
+  const now = new Date();
+  const parsedStart = new Date(state.active.startedAt).getTime();
+  const startedMs = Number.isFinite(parsedStart) ? parsedStart : now.getTime();
+  const parsedReal = state.active.realStartedAt ? new Date(state.active.realStartedAt).getTime() : startedMs;
+  const realStartMs = Number.isFinite(parsedReal) ? parsedReal : startedMs;
+  // Limite de 6 h evita durações absurdas ao retomar um treino esquecido aberto.
+  const elapsed = Math.max(0, Math.min(now.getTime() - realStartMs, 6 * 60 * 60 * 1000));
+  const finishedAt = new Date(startedMs + elapsed).toISOString();
   const draft = Object.assign({}, state.active, { finishedAt: finishedAt });
   const st = sessionStats(draft);
   if (!st.sets) {
@@ -1732,7 +1804,9 @@ function finishSession() {
     confirmLabel: 'Concluir e salvar',
     onConfirm: function () {
       const finished = normalizeSession(draft);
-      state.sessions.unshift(finished);
+      state.sessions.push(finished);
+      // Ordena por data para que treinos retroativos também entrem na posição certa.
+      sortSessionsByRecency(state.sessions);
       state.active = null;
       clearRest();
       persist();
@@ -2111,10 +2185,13 @@ function renderHistorico() {
   });
 
   let html = '<div class="view-head"><div><h2>Histórico</h2><p>' + state.sessions.length +
-    (state.sessions.length === 1 ? ' treino salvo' : ' treinos salvos') + '</p></div></div>';
+    (state.sessions.length === 1 ? ' treino salvo' : ' treinos salvos') + '</p></div>' +
+    '<button type="button" class="btn btn-secondary btn-sm" data-act="add-past">+ Treino passado</button></div>';
 
   if (!state.sessions.length) {
-    html += '<div class="empty">Nenhum treino registrado ainda.<br><br><button class="btn btn-primary btn-sm" data-act="go-treino">Iniciar treino</button></div>';
+    html += '<div class="empty">Nenhum treino registrado ainda.<br><br>' +
+      '<button class="btn btn-primary btn-sm" data-act="go-treino">Iniciar treino</button> ' +
+      '<button class="btn btn-secondary btn-sm" data-act="add-past">Adicionar treino passado</button></div>';
     box.innerHTML = html;
     bindHistorico(box);
     return;
@@ -2149,6 +2226,49 @@ function bindHistorico(box) {
   });
   const go = box.querySelector('[data-act="go-treino"]');
   if (go) go.addEventListener('click', function () { setView('treino'); });
+  const addPast = box.querySelector('[data-act="add-past"]');
+  if (addPast) addPast.addEventListener('click', openAddPastWorkout);
+}
+
+/**
+ * Adiciona um treino esquecido: escolhe o template e a data retroativa e
+ * abre a sessão naquela data para registrar as séries normalmente.
+ */
+function openAddPastWorkout() {
+  if (!state.templates.length) {
+    toast('Cadastre um treino antes de registrar um passado.');
+    return;
+  }
+  const today = dateKey(new Date());
+  const yesterdayDate = new Date();
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const defaultDate = dateKey(yesterdayDate);
+  openModal({
+    title: 'Adicionar treino passado',
+    body: '<p class="small muted" style="margin-bottom:12px">Escolha o treino e a data em que ele aconteceu. As séries serão registradas normalmente e salvas no histórico com essa data.</p>' +
+      '<label class="field"><span class="label">Treino</span><select id="past-template">' +
+      state.templates.map(function (t) {
+        return '<option value="' + esc(t.id) + '">' + esc(t.title) + (t.optional ? ' (opcional)' : '') + '</option>';
+      }).join('') +
+      '</select></label>' +
+      '<label class="field" style="margin:0"><span class="label">Data</span>' +
+      '<input type="date" id="past-date" value="' + defaultDate + '" max="' + today + '"></label>',
+    actions: [
+      {
+        label: 'Começar registro',
+        kind: 'btn-primary',
+        onClick: function () {
+          const sel = $('#past-template');
+          const dt = $('#past-date');
+          const id = sel ? sel.value : '';
+          const date = dt && dt.value && dt.value <= today ? dt.value : today;
+          closeModal();
+          startSession(id, { date: date });
+        }
+      },
+      { label: 'Cancelar', kind: 'btn-ghost', onClick: closeModal }
+    ]
+  });
 }
 
 /* =========================================================================
@@ -2680,7 +2800,7 @@ function applyImport(data) {
   const merged = Object.assign({}, base, data);
   merged.settings = Object.assign({}, base.settings, data.settings || {});
   merged.templates = data.templates.map(normalizeTemplate);
-  merged.sessions = (data.sessions || []).map(normalizeSession).filter(Boolean);
+  merged.sessions = sortSessionsByRecency((data.sessions || []).map(normalizeSession).filter(Boolean));
   merged.active = null;
   merged.onboardingDone = data.onboardingDone !== false;
   state = merged;
