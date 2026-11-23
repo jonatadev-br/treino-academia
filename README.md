@@ -554,8 +554,16 @@ application-label:'Treino Força'
 de execução por exercício, timer responsivo, metas automáticas de proteína/calorias e referência
 do último treino, além das correções de teclado/estabilidade.
 
-**1.0.1** — release (versionCode 1), build `release` assinado com v1 + v2 + v3. Download direto:
+**1.0.1** — release (versionCode 2), build `release` assinado com v1 + v2 + v3. Download direto:
 
 https://github.com/jonataprezende-commits/treino-academia/releases/download/v1.0.1/treino-forca-v1.0.1-release.apk
 
 Página da release: https://github.com/jonataprezende-commits/treino-academia/releases/tag/v1.0.1
+
+**1.0.2** — release (versionCode 3), correções de timer de descanso e cache do service worker. Download direto:
+
+https://github.com/jonataprezende-commits/treino-academia/releases/download/v1.0.2/treino-forca-v1.0.2-release.apk
+
+Página da release: https://github.com/jonataprezende-commits/treino-academia/releases/tag/v1.0.2
+
+> A v1.0.2 usa uma chave de assinatura nova (gerada no CI). Se instalou a v1.0.1, desinstale antes de instalar esta versão.
