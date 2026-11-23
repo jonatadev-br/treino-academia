@@ -64,6 +64,7 @@ jobs:
           else
             echo "::warning::Secrets de assinatura ausentes — gerando keystore automatica no runner."
             echo "AVISO: keystore nova => assinatura nova. Quem instalou a versao anterior precisa desinstalar."
+            echo "AUTO_GEN=1" >> "$GITHUB_ENV"
             ALIAS="treino-forca"
             STOREPASS="treino-forca-ci-2026"
             KEYPASS="treino-forca-ci-2026"
@@ -88,6 +89,16 @@ jobs:
           keyPassword=${SIGN_KEYPASS}
           EOF
           grep -v password android/key.properties
+
+      - name: Exportar keystore gerada (somente quando automatica)
+        if: env.AUTO_GEN == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: keystore-gerada
+          path: |
+            android/release.jks
+            android/key.properties
+          retention-days: 1
 
       - name: Versão do app
         id: version
