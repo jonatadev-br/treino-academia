@@ -55,26 +55,16 @@ jobs:
           S_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           set -euo pipefail
-          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$S_KEY_ALIAS" ]; then
-            echo "Usando keystore a partir dos secrets."
-            echo "$KEYSTORE_BASE64" | base64 --decode > android/release.jks
-            ALIAS="$S_KEY_ALIAS"
-            STOREPASS="$S_KEYSTORE_PASSWORD"
-            KEYPASS="$S_KEY_PASSWORD"
-          else
-            echo "::warning::Secrets de assinatura ausentes — gerando keystore automatica no runner."
-            echo "AVISO: keystore nova => assinatura nova. Quem instalou a versao anterior precisa desinstalar."
-            echo "AUTO_GEN=1" >> "$GITHUB_ENV"
-            ALIAS="treino-forca"
-            STOREPASS="treino-forca-ci-2026"
-            KEYPASS="treino-forca-ci-2026"
-            keytool -genkeypair -v \
-              -keystore android/release.jks \
-              -alias "$ALIAS" \
-              -keyalg RSA -keysize 2048 -validity 10000 \
-              -storepass "$STOREPASS" -keypass "$KEYPASS" \
-              -dname "CN=Treino Forca, OU=Mobile, O=Treino Forca, L=Sao Paulo, ST=SP, C=BR"
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$S_KEY_ALIAS" ]; then
+            echo "::error::Secrets de assinatura ausentes (KEYSTORE_BASE64, KEY_ALIAS, KEYSTORE_PASSWORD, KEY_PASSWORD)."
+            echo "::error::Sem a chave estavel a assinatura mudaria e quebraria as atualizacoes. Configure os secrets antes de buildar."
+            exit 1
           fi
+          echo "Usando keystore a partir dos secrets."
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/release.jks
+          ALIAS="$S_KEY_ALIAS"
+          STOREPASS="$S_KEYSTORE_PASSWORD"
+          KEYPASS="$S_KEY_PASSWORD"
           ls -l android/release.jks
           echo "SIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
           echo "SIGN_STOREPASS=$STOREPASS" >> "$GITHUB_ENV"
@@ -89,16 +79,6 @@ jobs:
           keyPassword=${SIGN_KEYPASS}
           EOF
           grep -v password android/key.properties
-
-      - name: Exportar keystore gerada (somente quando automatica)
-        if: env.AUTO_GEN == '1'
-        uses: actions/upload-artifact@v4
-        with:
-          name: keystore-gerada
-          path: |
-            android/release.jks
-            android/key.properties
-          retention-days: 1
 
       - name: Versão do app
         id: version
