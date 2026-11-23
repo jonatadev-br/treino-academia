@@ -32,6 +32,11 @@ jobs:
 
       - name: Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # Vazio de propósito: evita o `sdkmanager tools` (pacote removido do
+          # repositório oficial, causa "Failed to find package 'tools'").
+          # Os pacotes reais são instalados no passo seguinte.
+          packages: ''
 
       - name: Instalar platform/build-tools
         run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
