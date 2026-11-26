@@ -3017,3 +3017,22 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+// Exposicao para testes de unidade (so quando nao ha DOM/navegador).
+// Permite injetar o estado e chamar as funcoes puras de logica de treino.
+if (typeof globalThis !== 'undefined' && globalThis.__NODE_TEST__) {
+  globalThis.__treinoForcaTest = {
+    get state() { return state },
+    set state(s) { state = s },
+    initialState,
+    clampInt,
+    esc,
+    roundHalf,
+    incrementFor,
+    dateKey,
+    parseDateKey,
+    nextLoadAdvice,
+    deloadAlerts,
+    prMap,
+  };
+}
