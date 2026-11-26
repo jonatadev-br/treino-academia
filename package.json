@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "python3 -m http.server 4173 --directory www",
     "sync": "cap sync android",
-    "open:android": "cap open android"
+    "open:android": "cap open android",
+    "test": "node www/test-logic.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^6.2.0",
